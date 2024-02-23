@@ -8,10 +8,10 @@ if %errorlevel% == 0 (
     timeout /t 5
     exit /b
 )
-:: Login
-set SHARE="\\107.101.101.31\000. Initial Programs"
-set USER="chaiwat.k"
-set PWD="sds@th20230"
+:: Login sample
+set SHARE="path shar drive"
+set USER="user"
+set PWD="password"
 
 :: ========== Map the shared drive ==========
 net use %SHARE% %PWD% /user:%USER%
