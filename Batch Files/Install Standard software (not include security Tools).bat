@@ -8,10 +8,10 @@ if %errorlevel% == 0 (
     timeout /t 5
     exit /b
 )
-:: Login sample \\107.101.101.31\000. Initial Programs
-set SHARE="Path Share Drive"
-set USER="Username"
-set PWD="Password"
+:: Login
+set SHARE="\\107.101.101.31\000. Initial Programs"
+set USER="chaiwat.k"
+set PWD="sds@th20230"
 
 :: ========== Map the shared drive ==========
 net use %SHARE% %PWD% /user:%USER%
@@ -118,6 +118,10 @@ if %errorlevel% equ 0 (
     echo NWBC Install Failed
     popd
 )
+
+start "" "C:\Program Files (x86)\SAP\FrontEnd\SapGui\saplogon.exe"
+timeout /t 10 /nobreak
+taskkill /IM saplogon.exe /F
 
 pushd %SHARE%\"11. SAP\SAP 760 for PU\hosts_files"
 copy SAPUILandscape.xml "C:\Users\%USERNAME%\AppData\Roaming\SAP\Common"
