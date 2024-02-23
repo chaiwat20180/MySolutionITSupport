@@ -16,12 +16,24 @@ set PWD="Password"
 :: ========== Map the shared drive ==========
 net use %SHARE% %PWD% /user:%USER%
 :: ==========================================
+
+:: ========== Update Date & Time ========== 
 @echo off
 :: Update the time zone to UTC+07:00
 tzutil /s "SE Asia Standard Time"
 
 :: Stop the Windows Time service to apply new settings
 net stop w32time
+
+pushd %SHARE%\"88-Other\Regedit"
+regedit /s TimeDate.reg
+popd
+if %errorlevel% equ 0 (
+    echo Registry update complete
+) else (
+    echo Registry update Failed
+    popd
+)
 
 :: Configure the system to use Google's NTP server
 w32tm /config /manualpeerlist:"pool.ntp.org" /syncfromflags:manual /reliable:YES /update
@@ -32,23 +44,10 @@ net start w32time
 :: Force the system to synchronize the time with the NTP server
 w32tm /resync
 
-:: Set short date format to dd-MMM-yy
-reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d "dd-MMM-yy" /f
-
-:: Set long date format to d MMMM, yyyy
-reg add "HKCU\Control Panel\International" /v sLongDate /t REG_SZ /d "d MMMM, yyyy" /f
-
-:: Set short time format to HH:mm
-reg add "HKCU\Control Panel\International" /v sTimeFormat /t REG_SZ /d "H:mm" /f
-
-:: Set long time format to HH:mm:ss
-reg add "HKCU\Control Panel\International" /v sLongTime /t REG_SZ /d "HH:mm:ss" /f
-	
-echo Time zone updated to UTC+07:00 and system time synchronized with pool.ntp.org NTP server.
-
 
 echo "Date & Time Complete....."
 timeout /t 5
+:: =====================================
 
 :: ========== Disconnect the shared drive ========== 
 net use %SHARE% /delete
